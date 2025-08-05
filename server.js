@@ -45,8 +45,13 @@ uploadDirs.forEach(dir => {
   }
 });
 
-// Serve uploaded files
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// Serve uploaded files with no-cache headers
+app.use('/uploads', (req, res, next) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  next();
+}, express.static(path.join(__dirname, 'uploads')));
 
 // Connect to MongoDB (optional)
 try {
@@ -61,6 +66,18 @@ try {
 } catch (error) {
   console.log('Running without MongoDB connection - frontend only mode');
 }
+
+// API Cache Control Middleware
+const apiCacheControl = (req, res, next) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  res.setHeader('Surrogate-Control', 'no-store');
+  next();
+};
+
+// Apply cache control to all API routes
+app.use('/api', apiCacheControl);
 
 // API Routes
 app.use('/api/hero', heroRoutes);
@@ -83,16 +100,27 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-// Serve static files from the current directory
-app.use(express.static(path.join(__dirname)));
+// Serve static files from the current directory with no-cache headers
+app.use((req, res, next) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  next();
+}, express.static(path.join(__dirname)));
 
-// Explicitly serve api.js to ensure it's accessible
+// Explicitly serve api.js to ensure it's accessible with no-cache headers
 app.get('/api.js', (req, res) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
   res.sendFile(path.join(__dirname, 'api.js'));
 });
 
-// Route for the main HTML file
+// Route for the main HTML file with no-cache headers
 app.get('/', (req, res) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 

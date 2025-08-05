@@ -14,15 +14,22 @@ async function apiRequest(endpoint, method = 'GET', data = null, token = null) {
 
   const config = {
     method,
-    headers
+    headers,
+    // Add cache-busting headers to the request
+    cache: 'no-store'
   };
 
   if (data) {
     config.body = JSON.stringify(data);
   }
+  
+  // Add cache-busting timestamp to the URL
+  const cacheBuster = `_t=${Date.now()}`;
+  const separator = endpoint.includes('?') ? '&' : '?';
+  const cacheBustedEndpoint = `${endpoint}${separator}${cacheBuster}`;
 
   try {
-    const response = await fetch(`${API_URL}${endpoint}`, config);
+    const response = await fetch(`${API_URL}${cacheBustedEndpoint}`, config);
     const responseData = await response.json();
 
     if (!response.ok) {

@@ -1173,6 +1173,12 @@ body {
   margin-bottom: var(--space-32);
 }
 
+.section-header-actions {
+  display: flex;
+  gap: var(--space-8);
+  align-items: center;
+}
+
 .section-header h3 {
   font-size: var(--font-size-3xl);
   color: var(--club-dark-blue);
@@ -1983,6 +1989,18 @@ body {
 
 .message.error {
   background: var(--club-red);
+}
+
+.message.warning {
+  background: var(--club-yellow);
+}
+
+.message.info {
+  background: var(--club-light-blue);
+}
+
+.message.success {
+  background: var(--club-green);
 }
 
 .message.hidden {

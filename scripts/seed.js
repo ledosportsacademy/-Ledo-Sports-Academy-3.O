@@ -138,7 +138,7 @@ const donations = [
     date: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000), // 45 days ago
     purpose: 'Equipment',
     contactInfo: 'robert.brown@example.com, +1234567893',
-    paymentMethod: 'bank transfer',
+    paymentMethod: 'Bank Transfer',
     notes: 'Annual donation for new equipment',
     receiptNumber: 'DON-2023-001'
   },
@@ -148,7 +148,7 @@ const donations = [
     date: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
     purpose: 'Facility Improvement',
     contactInfo: 'sarah.williams@example.com, +1234567894',
-    paymentMethod: 'check',
+    paymentMethod: 'Check',
     notes: 'Donation for facility renovation',
     receiptNumber: 'DON-2023-002'
   },
@@ -158,7 +158,7 @@ const donations = [
     date: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000), // 15 days ago
     purpose: 'Scholarship',
     contactInfo: 'info@communityfoundation.org, +1234567895',
-    paymentMethod: 'bank transfer',
+    paymentMethod: 'Bank Transfer',
     notes: 'Annual scholarship fund donation',
     receiptNumber: 'DON-2023-003'
   }
@@ -169,9 +169,9 @@ const expenses = [
     title: 'Equipment Purchase',
     amount: 750,
     date: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000), // 60 days ago
-    category: 'equipment',
+    category: 'Equipment',
     description: 'Purchase of new training balls and cones',
-    paymentMethod: 'credit card',
+    paymentMethod: 'Other',
     approvedBy: 'Jane Smith',
     receiptImage: '/uploads/expenses/receipt-1.jpg',
     notes: 'Annual equipment refresh'
@@ -180,9 +180,9 @@ const expenses = [
     title: 'Facility Rent',
     amount: 1200,
     date: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
-    category: 'rent',
+    category: 'Venue',
     description: 'Monthly rent for training facility',
-    paymentMethod: 'bank transfer',
+    paymentMethod: 'Bank Transfer',
     approvedBy: 'Jane Smith',
     receiptImage: '/uploads/expenses/receipt-2.jpg',
     notes: 'Regular monthly payment'
@@ -191,9 +191,9 @@ const expenses = [
     title: 'Tournament Registration',
     amount: 500,
     date: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000), // 15 days ago
-    category: 'event',
+    category: 'Administrative',
     description: 'Registration fee for regional tournament',
-    paymentMethod: 'check',
+    paymentMethod: 'Check',
     approvedBy: 'Jane Smith',
     receiptImage: '/uploads/expenses/receipt-3.jpg',
     notes: 'Team registration for 3 age groups'
@@ -206,7 +206,7 @@ const experiences = [
     date: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000), // 90 days ago
     description: 'Our team won the regional tournament after an intense final match.',
     images: ['/uploads/experiences/tournament-1.jpg', '/uploads/experiences/tournament-2.jpg'],
-    category: 'tournament',
+    category: 'Tournament',
     location: 'Regional Sports Complex, Anytown',
     participants: [], // Will be populated with member IDs
     outcome: 'First Place',
@@ -217,7 +217,7 @@ const experiences = [
     date: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000), // 60 days ago
     description: 'A week-long intensive training camp focusing on skills development and team building.',
     images: ['/uploads/experiences/camp-1.jpg', '/uploads/experiences/camp-2.jpg'],
-    category: 'training',
+    category: 'Training',
     location: 'Mountain View Resort, Hilltown',
     participants: [], // Will be populated with member IDs
     outcome: 'Successful completion with improved team coordination',
@@ -231,8 +231,8 @@ const gallery = [
     imageUrl: '/uploads/gallery/team-photo.jpg',
     description: 'Official team photo for the 2023 season',
     date: new Date(Date.now() - 120 * 24 * 60 * 60 * 1000), // 120 days ago
-    category: 'team',
-    isFeatured: true,
+    category: 'Team',
+    featured: true,
     featuredOrder: 1,
     tags: ['team', 'official', '2023']
   },
@@ -241,8 +241,8 @@ const gallery = [
     imageUrl: '/uploads/gallery/training-session.jpg',
     description: 'Weekly training session focusing on passing drills',
     date: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
-    category: 'training',
-    isFeatured: true,
+    category: 'Training',
+    featured: true,
     featuredOrder: 2,
     tags: ['training', 'drills', 'skills']
   },
@@ -251,8 +251,8 @@ const gallery = [
     imageUrl: '/uploads/gallery/award-ceremony.jpg',
     description: 'Annual award ceremony recognizing outstanding achievements',
     date: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000), // 60 days ago
-    category: 'event',
-    isFeatured: true,
+    category: 'Event',
+    featured: true,
     featuredOrder: 3,
     tags: ['awards', 'ceremony', 'achievement']
   }
@@ -321,10 +321,10 @@ async function seedDatabase() {
           weekStartDate: weekStart,
           weekEndDate: weekEnd,
           amount: 50, // Standard weekly fee
-          status: i <= 2 ? 'paid' : 'pending', // Older fees are paid, newer are pending
-          paymentDate: i <= 2 ? new Date(weekStart.getTime() + (2 * 24 * 60 * 60 * 1000)) : null, // Payment date for paid fees
-          paymentMethod: i <= 2 ? 'cash' : null,
-          notes: i <= 2 ? 'Regular weekly payment' : '',
+          paymentStatus: i <= 2 ? 'Paid' : 'Pending', // Older fees are paid, newer are pending
+          paymentDate: new Date(weekStart.getTime() + (2 * 24 * 60 * 60 * 1000)), // Payment date for all fees
+          paymentMethod: i <= 2 ? 'Cash' : 'Other', // Default payment method for pending fees
+          notes: i <= 2 ? 'Regular weekly payment' : 'Payment pending',
           collectedBy: i <= 2 ? 'Jane Smith' : ''
         };
         

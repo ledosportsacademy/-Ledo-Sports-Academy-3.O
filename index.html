@@ -6,6 +6,7 @@
     <title>Ledo Sports Academy - Management System</title>
     <link rel="icon" type="image/svg+xml" href="uploads/favicon.svg">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -295,7 +296,10 @@
             <div class="container">
                 <div class="section-header">
                     <h3>Photo Gallery</h3>
-                    <button class="btn btn--primary hidden admin-only" id="addGalleryBtn">Add Photo</button>
+                    <div class="section-header-actions">
+                        <button class="btn btn--outline" id="refreshGalleryBtn"><i class="fas fa-sync"></i> Refresh</button>
+                        <button class="btn btn--primary hidden admin-only" id="addGalleryBtn">Add Photo</button>
+                    </div>
                 </div>
                 
                 <div class="admin-only gallery-management">

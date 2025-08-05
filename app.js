@@ -596,10 +596,104 @@ function handleRedirectUrl(redirectUrl, defaultUrl, openNewTab) {
 // Initialize app when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
   console.log('DOM loaded, initializing app...');
-  initializeApp();
+  loadDataFromAPI();
   setupEventListeners();
   setupKeyboardShortcuts();
 });
+
+// Load data from API and initialize app
+function loadDataFromAPI() {
+  console.log('Loading data from API...');
+  
+  // Check if API is available
+  if (window.API && window.API.gallery && typeof window.API.gallery.getAll === 'function') {
+    // Show loading message
+    showMessage('Loading data...', 'info');
+    
+    // Load gallery data from API
+    window.API.gallery.getAll()
+      .then(function(galleryData) {
+        console.log('Gallery data loaded from API');
+        // Update appData with fresh gallery data
+        appData.gallery = galleryData;
+        
+        // Continue loading other data if needed
+        // For now, just initialize the app with the updated data
+        initializeApp();
+      })
+      .catch(function(error) {
+        console.error('Error loading gallery data from API:', error);
+        // Initialize app with existing data if API fails
+        showMessage('Could not load fresh data. Using cached data.', 'warning');
+        initializeApp();
+      });
+  } else {
+    // API not available, initialize with existing data
+    console.warn('API not available, initializing with existing data');
+    initializeApp();
+  }
+}
+
+// Refresh gallery data from API
+function refreshGalleryData() {
+  console.log('Refreshing gallery data...');
+  
+  // Show loading spinner in the refresh button
+  const refreshBtn = document.getElementById('refreshGalleryBtn');
+  if (refreshBtn) {
+    refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Refreshing...';
+    refreshBtn.disabled = true;
+  }
+  
+  // Show loading message
+  showMessage('Refreshing gallery data...', 'info');
+  
+  // Check if API is available
+  if (window.API && window.API.gallery && typeof window.API.gallery.getAll === 'function') {
+    // Add timestamp to prevent caching
+    window.API.gallery.getAll()
+      .then(function(galleryData) {
+        console.log('Gallery data refreshed from API');
+        // Update appData with fresh gallery data
+        appData.gallery = galleryData;
+        
+        // Update the UI
+        updateHeroSlidesFromGallery();
+        renderHeroSlideshow();
+        renderGallery();
+        
+        // Show success message
+        showMessage('Gallery data refreshed successfully!', 'success');
+        
+        // Reset refresh button
+        if (refreshBtn) {
+          refreshBtn.innerHTML = '<i class="fas fa-sync"></i> Refresh';
+          refreshBtn.disabled = false;
+        }
+      })
+      .catch(function(error) {
+        console.error('Error refreshing gallery data:', error);
+        // Show error message
+        showMessage('Could not refresh gallery data. Please try again.', 'error');
+        
+        // Reset refresh button
+        if (refreshBtn) {
+          refreshBtn.innerHTML = '<i class="fas fa-sync"></i> Refresh';
+          refreshBtn.disabled = false;
+        }
+      });
+  } else {
+    // API not available
+    console.warn('API not available, cannot refresh gallery data');
+    showMessage('Cannot refresh gallery data. API not available.', 'error');
+    
+    // Reset refresh button
+    if (refreshBtn) {
+      refreshBtn.innerHTML = '<i class="fas fa-sync"></i> Refresh';
+      refreshBtn.disabled = false;
+    }
+  }
+}
 
 function initializeApp() {
   console.log('Initializing app...');
@@ -750,6 +844,14 @@ function setupEventListeners() {
 
   // Lightbox event listeners
   setupLightboxEventListeners();
+  
+  // Gallery refresh button
+  const refreshGalleryBtn = document.getElementById('refreshGalleryBtn');
+  if (refreshGalleryBtn) {
+    refreshGalleryBtn.addEventListener('click', function() {
+      refreshGalleryData();
+    });
+  }
   
   console.log('Event listeners set up successfully');
 }
@@ -1681,12 +1783,23 @@ function showMessage(text, type = 'success') {
   if (messageText) messageText.textContent = text;
   
   if (message) {
+    // Reset classes
     message.className = 'message';
+    
+    // Add appropriate class based on message type
     if (type === 'error') {
       message.classList.add('error');
+    } else if (type === 'warning') {
+      message.classList.add('warning');
+    } else if (type === 'info') {
+      message.classList.add('info');
+    } else {
+      message.classList.add('success');
     }
+    
     message.classList.remove('hidden');
     
+    // Auto-hide message after 3 seconds
     setTimeout(function() {
       message.classList.add('hidden');
     }, 3000);

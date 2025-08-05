@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <rect width="800" height="600" fill="#27ae60"/>
+  <rect x="200" y="150" width="400" height="300" fill="#2ecc71"/>
+  <circle cx="400" cy="300" r="100" fill="white"/>
+  <text x="400" y="310" font-family="Arial" font-size="36" text-anchor="middle" fill="#27ae60">Academy</text>
+</svg>

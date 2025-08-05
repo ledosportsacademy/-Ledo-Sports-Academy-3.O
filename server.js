@@ -53,19 +53,61 @@ app.use('/uploads', (req, res, next) => {
   next();
 }, express.static(path.join(__dirname, 'uploads')));
 
-// Connect to MongoDB (optional)
-try {
-  mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://ledosportsacademy:iD0xFkdX5IqDXWLK@cluster0.bpaauiy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
+// Connect to MongoDB with retry mechanism
+let isConnected = false;
+let retryCount = 0;
+const maxRetries = 5;
+const retryInterval = 5000; // 5 seconds
+
+function connectWithRetry() {
+  console.log(`MongoDB connection attempt ${retryCount + 1}/${maxRetries}...`);
+  
+  mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    connectTimeoutMS: 5000, // Reduce timeout to 5 seconds
-    serverSelectionTimeoutMS: 5000 // Reduce server selection timeout
+    connectTimeoutMS: 15000, // Increased timeout for better reliability
+    serverSelectionTimeoutMS: 15000 // Increased server selection timeout
   })
-  .then(() => console.log('MongoDB connected successfully'))
-  .catch(err => console.error('MongoDB connection error:', err));
-} catch (error) {
-  console.log('Running without MongoDB connection - frontend only mode');
+  .then(() => {
+    console.log('MongoDB connected successfully - Live data storage enabled');
+    isConnected = true;
+    retryCount = 0; // Reset retry count on successful connection
+    
+    // Set up connection error handler to reconnect if connection is lost
+    mongoose.connection.on('error', (err) => {
+      console.error('MongoDB connection error:', err);
+      if (isConnected) {
+        isConnected = false;
+        console.log('MongoDB connection lost. Attempting to reconnect...');
+        setTimeout(connectWithRetry, retryInterval);
+      }
+    });
+    
+    // Handle disconnection
+    mongoose.connection.on('disconnected', () => {
+      if (isConnected) {
+        isConnected = false;
+        console.log('MongoDB disconnected. Attempting to reconnect...');
+        setTimeout(connectWithRetry, retryInterval);
+      }
+    });
+  })
+  .catch(err => {
+    console.error('MongoDB connection error:', err);
+    if (retryCount < maxRetries) {
+      retryCount++;
+      console.log(`Retrying connection in ${retryInterval/1000} seconds...`);
+      setTimeout(connectWithRetry, retryInterval);
+    } else {
+      console.error(`Failed to connect to MongoDB after ${maxRetries} attempts.`);
+      console.log('Running in frontend-only mode - admin features will use client-side authentication');
+      // Continue running the app in frontend-only mode instead of exiting
+    }
+  });
 }
+
+// Start connection process
+connectWithRetry();
 
 // API Cache Control Middleware
 const apiCacheControl = (req, res, next) => {
@@ -79,6 +121,9 @@ const apiCacheControl = (req, res, next) => {
 // Apply cache control to all API routes
 app.use('/api', apiCacheControl);
 
+// Import DB status checker and reconnection function
+const { checkMongoDBStatus, reconnectMongoDB } = require('./scripts/db-status');
+
 // API Routes
 app.use('/api/hero', heroRoutes);
 app.use('/api/activities', activityRoutes);
@@ -89,6 +134,40 @@ app.use('/api/experiences', experienceRoutes);
 app.use('/api/weekly-fees', weeklyFeeRoutes);
 app.use('/api/gallery', galleryRoutes);
 app.use('/api/admin', adminRoutes);
+
+// MongoDB status endpoint
+app.get('/api/db-status', (req, res) => {
+  res.json(checkMongoDBStatus());
+});
+
+// MongoDB reconnect endpoint
+app.post('/api/db-reconnect', async (req, res) => {
+  try {
+    // Only allow authenticated admins to trigger reconnection
+    const token = req.header('x-auth-token');
+    if (!token) {
+      return res.status(401).json({ success: false, message: 'No authentication token, access denied' });
+    }
+    
+    // Attempt reconnection
+    const result = await reconnectMongoDB();
+    res.json(result);
+    
+    // If reconnection was successful, update the global connection state
+    if (result.success) {
+      isConnected = true;
+      retryCount = 0;
+      console.log('Manual reconnection successful');
+    }
+  } catch (error) {
+    console.error('Error during manual reconnection:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Server error during reconnection attempt',
+      error: error.message 
+    });
+  }
+});
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {

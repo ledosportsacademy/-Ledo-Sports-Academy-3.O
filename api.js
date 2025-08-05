@@ -1,6 +1,9 @@
 // API service for Ledo Sports Academy
 
-const API_URL = 'http://localhost:5000/api';
+// Determine API URL based on environment
+const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+  ? 'http://localhost:5000/api' 
+  : '/api'; // In production, use relative path
 
 // Helper function for making API requests
 async function apiRequest(endpoint, method = 'GET', data = null, token = null) {
@@ -335,6 +338,65 @@ async function uploadFile(file, endpoint) {
   }
 }
 
+// Database Status API
+const dbStatusAPI = {
+  getStatus: async () => {
+    try {
+      const response = await fetch(`${API_URL.replace('/api', '')}/api/db-status?_t=${Date.now()}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache'
+        },
+        cache: 'no-store'
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch database status');
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.error('Error checking database status:', error);
+      return { isConnected: false, status: 'Error', readyState: 0 };
+    }
+  },
+  
+  // Trigger a manual reconnection attempt to MongoDB
+  reconnect: async () => {
+    try {
+      const token = authAPI.getToken();
+      if (!token) {
+        throw new Error('Authentication required to reconnect database');
+      }
+      
+      const response = await fetch(`${API_URL.replace('/api', '')}/api/db-reconnect`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache',
+          'x-auth-token': token
+        },
+        cache: 'no-store'
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to reconnect database');
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.error('Error reconnecting to database:', error);
+      return { 
+        success: false, 
+        message: error.message || 'Failed to reconnect to database',
+        error: error.toString()
+      };
+    }
+  }
+};
+
 // Export all API services
 const API = {
   auth: authAPI,
@@ -346,6 +408,7 @@ const API = {
   experiences: experiencesAPI,
   weeklyFees: weeklyFeesAPI,
   gallery: galleryAPI,
+  dbStatus: dbStatusAPI,
   uploadFile
 };
 

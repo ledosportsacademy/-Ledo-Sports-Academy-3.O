@@ -6,7 +6,7 @@ This is a full-stack web application for managing Ledo Sports Academy operations
 ## Technology Stack
 - **Frontend**: HTML, CSS, JavaScript
 - **Backend**: Node.js, Express.js
-- **Database**: MongoDB
+- **Database**: MongoDB Atlas (Cloud Database)
 - **Authentication**: JWT (JSON Web Tokens)
 
 ## Setup Instructions
@@ -25,11 +25,24 @@ This is a full-stack web application for managing Ledo Sports Academy operations
 3. Create a `.env` file in the root directory with the following variables:
    ```
    PORT=5000
-   MONGODB_URI=your_mongodb_connection_string
-   JWT_SECRET=your_jwt_secret_key
+   MONGODB_URI=mongodb+srv://ledosportsacademy:iD0xFkdX5IqDXWLK@cluster0.bpaauiy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+   JWT_SECRET=ledo_sports_academy_secret_key
    NODE_ENV=development
    ```
-4. Start the server:
+   
+   Note: The MongoDB URI is already configured to connect to the Ledo Sports Academy database in MongoDB Atlas.
+4. Verify the database connection:
+   ```
+   npm run db:verify
+   ```
+   This will check if your application can connect to MongoDB and verify all models.
+
+5. Seed the database with initial data (if needed):
+   ```
+   npm run db:seed
+   ```
+
+6. Start the server:
    ```
    npm start
    ```

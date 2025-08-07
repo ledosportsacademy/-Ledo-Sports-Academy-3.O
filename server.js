@@ -65,8 +65,11 @@ function connectWithRetry() {
   mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    connectTimeoutMS: 15000, // Increased timeout for better reliability
-    serverSelectionTimeoutMS: 15000 // Increased server selection timeout
+    connectTimeoutMS: 30000, // Doubled timeout for better reliability
+    serverSelectionTimeoutMS: 30000, // Doubled server selection timeout
+    socketTimeoutMS: 45000, // Added socket timeout
+    keepAlive: true, // Keep connection alive
+    keepAliveInitialDelay: 300000 // 5 minutes
   })
   .then(() => {
     console.log('MongoDB connected successfully - Live data storage enabled');
@@ -91,6 +94,21 @@ function connectWithRetry() {
         setTimeout(connectWithRetry, retryInterval);
       }
     });
+    
+    // Set up a periodic ping to keep connection alive
+    const pingInterval = 60000; // 1 minute
+    setInterval(async () => {
+      try {
+        if (mongoose.connection.readyState === 1) { // Connected
+          // Perform a lightweight operation to keep connection alive
+          await mongoose.connection.db.admin().ping();
+          console.log('MongoDB ping successful - Connection maintained');
+        }
+      } catch (err) {
+        console.error('MongoDB ping failed:', err);
+        // Connection will be handled by the error and disconnected handlers
+      }
+    }, pingInterval);
   })
   .catch(err => {
     console.error('MongoDB connection error:', err);

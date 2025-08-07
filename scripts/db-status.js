@@ -101,8 +101,11 @@ async function reconnectMongoDB() {
     await mongoose.connect(uri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      connectTimeoutMS: 15000,
-      serverSelectionTimeoutMS: 15000
+      connectTimeoutMS: 30000, // Doubled timeout for better reliability
+      serverSelectionTimeoutMS: 30000, // Doubled server selection timeout
+      socketTimeoutMS: 45000, // Added socket timeout
+      keepAlive: true, // Keep connection alive
+      keepAliveInitialDelay: 300000 // 5 minutes
     });
     
     return {

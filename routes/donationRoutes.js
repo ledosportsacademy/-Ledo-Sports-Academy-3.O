@@ -1,36 +1,23 @@
 const express = require('express');
 const router = express.Router();
 const donationController = require('../controllers/donationController');
-const { auth } = require('../middleware/auth');
 
-// @route   GET /api/donations
-// @desc    Get all donations
-// @access  Private
-router.get('/', auth, donationController.getAllDonations);
+// GET all donations
+router.get('/', donationController.getAllDonations);
 
-// @route   GET /api/donations/stats
-// @desc    Get donation statistics
-// @access  Private
-router.get('/stats', auth, donationController.getDonationStats);
+// GET total donations amount
+router.get('/total', donationController.getTotalDonations);
 
-// @route   GET /api/donations/:id
-// @desc    Get donation by ID
-// @access  Private
-router.get('/:id', auth, donationController.getDonationById);
+// GET a single donation by ID
+router.get('/:id', donationController.getDonationById);
 
-// @route   POST /api/donations
-// @desc    Create a new donation
-// @access  Private
-router.post('/', auth, donationController.createDonation);
+// POST a new donation
+router.post('/', donationController.createDonation);
 
-// @route   PUT /api/donations/:id
-// @desc    Update a donation
-// @access  Private
-router.put('/:id', auth, donationController.updateDonation);
+// PUT (update) a donation
+router.put('/:id', donationController.updateDonation);
 
-// @route   DELETE /api/donations/:id
-// @desc    Delete a donation
-// @access  Private
-router.delete('/:id', auth, donationController.deleteDonation);
+// DELETE a donation
+router.delete('/:id', donationController.deleteDonation);
 
 module.exports = router;

@@ -1,57 +1,35 @@
 const mongoose = require('mongoose');
 
-const HeroSlideSchema = new mongoose.Schema({
+const heroSlideSchema = new mongoose.Schema({
+  id: {
+    type: Number,
+    required: true,
+    unique: true
+  },
   title: {
     type: String,
-    required: true,
-    trim: true
+    required: true
   },
   subtitle: {
     type: String,
-    required: true,
-    trim: true
+    required: true
   },
   description: {
     type: String,
-    required: true,
-    trim: true
+    required: true
   },
   backgroundImage: {
     type: String,
-    required: true,
-    trim: true
+    required: true
   },
   ctaText: {
     type: String,
-    required: true,
-    trim: true
+    required: true
   },
   ctaLink: {
     type: String,
-    required: true,
-    trim: true
-  },
-  redirectUrl: {
-    type: String,
-    default: '',
-    trim: true
-  },
-  openNewTab: {
-    type: Boolean,
-    default: false
-  },
-  order: {
-    type: Number,
-    default: 0
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now
+    required: true
   }
-});
+}, { timestamps: true });
 
-module.exports = mongoose.model('HeroSlide', HeroSlideSchema);
+module.exports = mongoose.model('HeroSlide', heroSlideSchema);

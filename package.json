@@ -1,37 +1,23 @@
 {
   "name": "ledo-sports-academy",
   "version": "1.0.0",
-  "description": "Ledo Sports Academy Management System",
+  "description": "Backend for Ledo Sports Academy Management System",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "server": "nodemon server.js",
-    "client": "npm start --prefix client",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "db:verify": "node scripts/db-verify.js",
-    "db:seed": "node scripts/seed.js"
+    "dev": "nodemon server.js",
+    "seed": "node seedData.js",
+    "test-api": "node testAPI.js"
   },
-  "keywords": [
-    "sports",
-    "academy",
-    "management",
-    "mongodb"
-  ],
-  "author": "Ledo Sports Academy",
-  "license": "MIT",
   "dependencies": {
-    "bcryptjs": "^2.4.3",
+    "axios": "^1.11.0",
+    "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^7.5.0",
-    "multer": "^1.4.5-lts.1",
-    "validator": "^13.11.0"
+    "mongoose": "^7.5.0"
   },
   "devDependencies": {
-    "concurrently": "^8.2.1",
     "nodemon": "^3.0.1"
   }
 }

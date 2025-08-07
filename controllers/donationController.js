@@ -3,112 +3,51 @@ const Donation = require('../models/Donation');
 // Get all donations
 exports.getAllDonations = async (req, res) => {
   try {
-    const { startDate, endDate, minAmount, maxAmount, paymentMethod } = req.query;
-    let query = {};
-    
-    // Apply date range filter if provided
-    if (startDate || endDate) {
-      query.date = {};
-      if (startDate) query.date.$gte = new Date(startDate);
-      if (endDate) query.date.$lte = new Date(endDate);
-    }
-    
-    // Apply amount range filter if provided
-    if (minAmount || maxAmount) {
-      query.amount = {};
-      if (minAmount) query.amount.$gte = Number(minAmount);
-      if (maxAmount) query.amount.$lte = Number(maxAmount);
-    }
-    
-    // Apply payment method filter if provided
-    if (paymentMethod) {
-      query.paymentMethod = paymentMethod;
-    }
-    
-    const donations = await Donation.find(query).sort({ date: -1 });
+    const donations = await Donation.find().sort({ date: -1 });
     res.status(200).json(donations);
   } catch (error) {
-    console.error('Error fetching donations:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
 // Get a single donation by ID
 exports.getDonationById = async (req, res) => {
   try {
-    const donation = await Donation.findById(req.params.id);
-    
+    const donation = await Donation.findOne({ id: req.params.id });
     if (!donation) {
       return res.status(404).json({ message: 'Donation not found' });
     }
-    
     res.status(200).json(donation);
   } catch (error) {
-    console.error('Error fetching donation:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
 // Create a new donation
 exports.createDonation = async (req, res) => {
   try {
-    const { 
-      donorName, 
-      amount, 
-      date, 
-      purpose, 
-      contactInfo, 
-      paymentMethod,
-      notes,
-      receiptNumber 
-    } = req.body;
+    // Find the highest existing ID and increment by 1
+    const highestIdDonation = await Donation.findOne().sort({ id: -1 });
+    const newId = highestIdDonation ? highestIdDonation.id + 1 : 1;
     
     const newDonation = new Donation({
-      donorName,
-      amount,
-      date: date || Date.now(),
-      purpose: purpose || 'General',
-      contactInfo,
-      paymentMethod: paymentMethod || 'Cash',
-      notes,
-      receiptNumber
+      ...req.body,
+      id: newId
     });
     
     const savedDonation = await newDonation.save();
     res.status(201).json(savedDonation);
   } catch (error) {
-    console.error('Error creating donation:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(400).json({ message: error.message });
   }
 };
 
 // Update a donation
 exports.updateDonation = async (req, res) => {
   try {
-    const { 
-      donorName, 
-      amount, 
-      date, 
-      purpose, 
-      contactInfo, 
-      paymentMethod,
-      notes,
-      receiptNumber 
-    } = req.body;
-    
-    const updatedDonation = await Donation.findByIdAndUpdate(
-      req.params.id,
-      {
-        donorName,
-        amount,
-        date,
-        purpose,
-        contactInfo,
-        paymentMethod,
-        notes,
-        receiptNumber,
-        updatedAt: Date.now()
-      },
+    const updatedDonation = await Donation.findOneAndUpdate(
+      { id: req.params.id },
+      req.body,
       { new: true, runValidators: true }
     );
     
@@ -118,15 +57,14 @@ exports.updateDonation = async (req, res) => {
     
     res.status(200).json(updatedDonation);
   } catch (error) {
-    console.error('Error updating donation:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(400).json({ message: error.message });
   }
 };
 
 // Delete a donation
 exports.deleteDonation = async (req, res) => {
   try {
-    const deletedDonation = await Donation.findByIdAndDelete(req.params.id);
+    const deletedDonation = await Donation.findOneAndDelete({ id: req.params.id });
     
     if (!deletedDonation) {
       return res.status(404).json({ message: 'Donation not found' });
@@ -134,47 +72,25 @@ exports.deleteDonation = async (req, res) => {
     
     res.status(200).json({ message: 'Donation deleted successfully' });
   } catch (error) {
-    console.error('Error deleting donation:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
-// Get donation statistics
-exports.getDonationStats = async (req, res) => {
+// Get total donations amount
+exports.getTotalDonations = async (req, res) => {
   try {
-    const totalAmount = await Donation.aggregate([
-      { $group: { _id: null, total: { $sum: '$amount' } } }
-    ]);
-    
-    const donationsByMonth = await Donation.aggregate([
+    const result = await Donation.aggregate([
       {
         $group: {
-          _id: { $dateToString: { format: '%Y-%m', date: '$date' } },
-          total: { $sum: '$amount' },
-          count: { $sum: 1 }
+          _id: null,
+          total: { $sum: '$amount' }
         }
-      },
-      { $sort: { _id: 1 } }
+      }
     ]);
     
-    const donationsByPurpose = await Donation.aggregate([
-      {
-        $group: {
-          _id: '$purpose',
-          total: { $sum: '$amount' },
-          count: { $sum: 1 }
-        }
-      },
-      { $sort: { total: -1 } }
-    ]);
-    
-    res.status(200).json({
-      totalAmount: totalAmount.length > 0 ? totalAmount[0].total : 0,
-      donationsByMonth,
-      donationsByPurpose
-    });
+    const totalAmount = result.length > 0 ? result[0].total : 0;
+    res.status(200).json({ total: totalAmount });
   } catch (error) {
-    console.error('Error getting donation statistics:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };

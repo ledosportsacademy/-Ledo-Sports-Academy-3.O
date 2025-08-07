@@ -1,53 +1,27 @@
 const mongoose = require('mongoose');
 
-const ExperienceSchema = new mongoose.Schema({
+const experienceSchema = new mongoose.Schema({
+  id: {
+    type: Number,
+    required: true,
+    unique: true
+  },
   title: {
     type: String,
-    required: true,
-    trim: true
+    required: true
   },
   date: {
-    type: Date,
+    type: String,
     required: true
   },
   description: {
     type: String,
-    required: true,
-    trim: true
+    required: true
   },
-  images: [{
+  image: {
     type: String,
-    trim: true
-  }],
-  category: {
-    type: String,
-    enum: ['Match', 'Tournament', 'Training', 'Event', 'Achievement', 'Other'],
-    default: 'Other'
-  },
-  location: {
-    type: String,
-    trim: true
-  },
-  participants: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Member'
-  }],
-  outcome: {
-    type: String,
-    trim: true
-  },
-  highlights: {
-    type: String,
-    trim: true
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now
+    required: true
   }
-});
+}, { timestamps: true });
 
-module.exports = mongoose.model('Experience', ExperienceSchema);
+module.exports = mongoose.model('Experience', experienceSchema);

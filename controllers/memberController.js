@@ -3,117 +3,51 @@ const Member = require('../models/Member');
 // Get all members
 exports.getAllMembers = async (req, res) => {
   try {
-    const { active, role, search } = req.query;
-    let query = {};
-    
-    // Apply filters if provided
-    if (active !== undefined) {
-      query.active = active === 'true';
-    }
-    
-    if (role) {
-      query.role = role;
-    }
-    
-    if (search) {
-      query.$or = [
-        { name: { $regex: search, $options: 'i' } },
-        { role: { $regex: search, $options: 'i' } }
-      ];
-    }
-    
-    const members = await Member.find(query).sort({ name: 1 });
+    const members = await Member.find().sort({ id: 1 });
     res.status(200).json(members);
   } catch (error) {
-    console.error('Error fetching members:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
 // Get a single member by ID
 exports.getMemberById = async (req, res) => {
   try {
-    const member = await Member.findById(req.params.id);
-    
+    const member = await Member.findOne({ id: req.params.id });
     if (!member) {
       return res.status(404).json({ message: 'Member not found' });
     }
-    
     res.status(200).json(member);
   } catch (error) {
-    console.error('Error fetching member:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
 // Create a new member
 exports.createMember = async (req, res) => {
   try {
-    const { 
-      name, 
-      contact, 
-      phone, 
-      joinDate, 
-      role, 
-      image,
-      address,
-      emergencyContact,
-      dateOfBirth,
-      active 
-    } = req.body;
+    // Find the highest existing ID and increment by 1
+    const highestIdMember = await Member.findOne().sort({ id: -1 });
+    const newId = highestIdMember ? highestIdMember.id + 1 : 1;
     
     const newMember = new Member({
-      name,
-      contact,
-      phone,
-      joinDate,
-      role,
-      image,
-      address: address || '',
-      emergencyContact: emergencyContact || '',
-      dateOfBirth,
-      active: active !== undefined ? active : true
+      ...req.body,
+      id: newId
     });
     
     const savedMember = await newMember.save();
     res.status(201).json(savedMember);
   } catch (error) {
-    console.error('Error creating member:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(400).json({ message: error.message });
   }
 };
 
 // Update a member
 exports.updateMember = async (req, res) => {
   try {
-    const { 
-      name, 
-      contact, 
-      phone, 
-      joinDate, 
-      role, 
-      image,
-      address,
-      emergencyContact,
-      dateOfBirth,
-      active 
-    } = req.body;
-    
-    const updatedMember = await Member.findByIdAndUpdate(
-      req.params.id,
-      {
-        name,
-        contact,
-        phone,
-        joinDate,
-        role,
-        image,
-        address,
-        emergencyContact,
-        dateOfBirth,
-        active,
-        updatedAt: Date.now()
-      },
+    const updatedMember = await Member.findOneAndUpdate(
+      { id: req.params.id },
+      req.body,
       { new: true, runValidators: true }
     );
     
@@ -123,15 +57,14 @@ exports.updateMember = async (req, res) => {
     
     res.status(200).json(updatedMember);
   } catch (error) {
-    console.error('Error updating member:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(400).json({ message: error.message });
   }
 };
 
 // Delete a member
 exports.deleteMember = async (req, res) => {
   try {
-    const deletedMember = await Member.findByIdAndDelete(req.params.id);
+    const deletedMember = await Member.findOneAndDelete({ id: req.params.id });
     
     if (!deletedMember) {
       return res.status(404).json({ message: 'Member not found' });
@@ -139,44 +72,24 @@ exports.deleteMember = async (req, res) => {
     
     res.status(200).json({ message: 'Member deleted successfully' });
   } catch (error) {
-    console.error('Error deleting member:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
-// Update member active status
-exports.updateMemberStatus = async (req, res) => {
+// Search members by name
+exports.searchMembers = async (req, res) => {
   try {
-    const { active } = req.body;
-    
-    if (active === undefined) {
-      return res.status(400).json({ message: 'Active status is required' });
+    const { query } = req.query;
+    if (!query) {
+      return res.status(400).json({ message: 'Search query is required' });
     }
     
-    const updatedMember = await Member.findByIdAndUpdate(
-      req.params.id,
-      { active, updatedAt: Date.now() },
-      { new: true, runValidators: true }
-    );
+    const members = await Member.find({
+      name: { $regex: query, $options: 'i' }
+    }).sort({ id: 1 });
     
-    if (!updatedMember) {
-      return res.status(404).json({ message: 'Member not found' });
-    }
-    
-    res.status(200).json(updatedMember);
+    res.status(200).json(members);
   } catch (error) {
-    console.error('Error updating member status:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
-};
-
-// Get active members count
-exports.getActiveMembersCount = async (req, res) => {
-  try {
-    const count = await Member.countDocuments({ active: true });
-    res.status(200).json({ count });
-  } catch (error) {
-    console.error('Error getting active members count:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };

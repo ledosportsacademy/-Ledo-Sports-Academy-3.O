@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ledo Sports Academy API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .endpoint-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .endpoint {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            width: 350px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .endpoint h3 {
+            margin-top: 0;
+            color: #3498db;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        pre {
+            background-color: #f1f1f1;
+            padding: 10px;
+            border-radius: 4px;
+            overflow: auto;
+            max-height: 200px;
+            font-size: 14px;
+        }
+        .loading {
+            color: #e67e22;
+        }
+        .success {
+            color: #27ae60;
+        }
+        .error {
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ledo Sports Academy API Test</h1>
+    
+    <div class="endpoint-container">
+        <!-- Hero Slides -->
+        <div class="endpoint">
+            <h3>Hero Slides</h3>
+            <button onclick="fetchData('/api/hero-slides', 'heroSlides')">Get All Slides</button>
+            <div id="heroSlides"></div>
+        </div>
+        
+        <!-- Activities -->
+        <div class="endpoint">
+            <h3>Activities</h3>
+            <button onclick="fetchData('/api/activities', 'activities')">Get All Activities</button>
+            <button onclick="fetchData('/api/activities/status/upcoming', 'upcomingActivities')">Get Upcoming</button>
+            <div id="activities"></div>
+            <div id="upcomingActivities"></div>
+        </div>
+        
+        <!-- Members -->
+        <div class="endpoint">
+            <h3>Members</h3>
+            <button onclick="fetchData('/api/members', 'members')">Get All Members</button>
+            <button onclick="fetchData('/api/members/search?query=ar', 'memberSearch')">Search 'ar'</button>
+            <div id="members"></div>
+            <div id="memberSearch"></div>
+        </div>
+        
+        <!-- Donations -->
+        <div class="endpoint">
+            <h3>Donations</h3>
+            <button onclick="fetchData('/api/donations', 'donations')">Get All Donations</button>
+            <button onclick="fetchData('/api/donations/total', 'donationsTotal')">Get Total</button>
+            <div id="donations"></div>
+            <div id="donationsTotal"></div>
+        </div>
+        
+        <!-- Experiences -->
+        <div class="endpoint">
+            <h3>Experiences</h3>
+            <button onclick="fetchData('/api/experiences', 'experiences')">Get All Experiences</button>
+            <div id="experiences"></div>
+        </div>
+        
+        <!-- Expenses -->
+        <div class="endpoint">
+            <h3>Expenses</h3>
+            <button onclick="fetchData('/api/expenses', 'expenses')">Get All Expenses</button>
+            <button onclick="fetchData('/api/expenses/total', 'expensesTotal')">Get Total</button>
+            <button onclick="fetchData('/api/expenses/by-category', 'expensesByCategory')">By Category</button>
+            <div id="expenses"></div>
+            <div id="expensesTotal"></div>
+            <div id="expensesByCategory"></div>
+        </div>
+        
+        <!-- Weekly Fees -->
+        <div class="endpoint">
+            <h3>Weekly Fees</h3>
+            <button onclick="fetchData('/api/weekly-fees', 'weeklyFees')">Get All Weekly Fees</button>
+            <div id="weeklyFees"></div>
+        </div>
+    </div>
+
+    <script>
+        async function fetchData(endpoint, elementId) {
+            const resultElement = document.getElementById(elementId);
+            resultElement.innerHTML = '<p class="loading">Loading...</p>';
+            
+            try {
+                const response = await fetch(`http://localhost:3000${endpoint}`);
+                const data = await response.json();
+                
+                // Format the response
+                let formattedData = '';
+                if (Array.isArray(data)) {
+                    formattedData = `<p class="success">Found ${data.length} items</p>`;
+                    formattedData += `<pre>${JSON.stringify(data.slice(0, 2), null, 2)}</pre>`;
+                    if (data.length > 2) {
+                        formattedData += `<p>... and ${data.length - 2} more items</p>`;
+                    }
+                } else {
+                    formattedData = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                }
+                
+                resultElement.innerHTML = formattedData;
+            } catch (error) {
+                resultElement.innerHTML = `<p class="error">Error: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>

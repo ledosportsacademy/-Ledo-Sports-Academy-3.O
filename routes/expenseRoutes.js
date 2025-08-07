@@ -1,36 +1,26 @@
 const express = require('express');
 const router = express.Router();
 const expenseController = require('../controllers/expenseController');
-const { auth } = require('../middleware/auth');
 
-// @route   GET /api/expenses
-// @desc    Get all expenses
-// @access  Private
-router.get('/', auth, expenseController.getAllExpenses);
+// GET all expenses
+router.get('/', expenseController.getAllExpenses);
 
-// @route   GET /api/expenses/stats
-// @desc    Get expense statistics
-// @access  Private
-router.get('/stats', auth, expenseController.getExpenseStats);
+// GET total expenses amount
+router.get('/total', expenseController.getTotalExpenses);
 
-// @route   GET /api/expenses/:id
-// @desc    Get expense by ID
-// @access  Private
-router.get('/:id', auth, expenseController.getExpenseById);
+// GET expenses by category
+router.get('/by-category', expenseController.getExpensesByCategory);
 
-// @route   POST /api/expenses
-// @desc    Create a new expense
-// @access  Private
-router.post('/', auth, expenseController.createExpense);
+// GET a single expense by ID
+router.get('/:id', expenseController.getExpenseById);
 
-// @route   PUT /api/expenses/:id
-// @desc    Update an expense
-// @access  Private
-router.put('/:id', auth, expenseController.updateExpense);
+// POST a new expense
+router.post('/', expenseController.createExpense);
 
-// @route   DELETE /api/expenses/:id
-// @desc    Delete an expense
-// @access  Private
-router.delete('/:id', auth, expenseController.deleteExpense);
+// PUT (update) an expense
+router.put('/:id', expenseController.updateExpense);
+
+// DELETE an expense
+router.delete('/:id', expenseController.deleteExpense);
 
 module.exports = router;

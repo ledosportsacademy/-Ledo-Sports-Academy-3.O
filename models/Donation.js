@@ -1,51 +1,27 @@
 const mongoose = require('mongoose');
 
-const DonationSchema = new mongoose.Schema({
+const donationSchema = new mongoose.Schema({
+  id: {
+    type: Number,
+    required: true,
+    unique: true
+  },
   donorName: {
     type: String,
-    required: true,
-    trim: true
+    required: true
   },
   amount: {
     type: Number,
-    required: true,
-    min: 0
+    required: true
   },
   date: {
-    type: Date,
-    required: true,
-    default: Date.now
+    type: String,
+    required: true
   },
   purpose: {
     type: String,
-    trim: true,
-    default: 'General'
-  },
-  contactInfo: {
-    type: String,
-    trim: true
-  },
-  paymentMethod: {
-    type: String,
-    enum: ['Cash', 'Bank Transfer', 'UPI', 'Check', 'Other'],
-    default: 'Cash'
-  },
-  notes: {
-    type: String,
-    trim: true
-  },
-  receiptNumber: {
-    type: String,
-    trim: true
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now
+    required: true
   }
-});
+}, { timestamps: true });
 
-module.exports = mongoose.model('Donation', DonationSchema);
+module.exports = mongoose.model('Donation', donationSchema);

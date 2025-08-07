@@ -1,145 +1,110 @@
 # Ledo Sports Academy Management System
 
-## Overview
-This is a full-stack web application for managing Ledo Sports Academy operations, including activities, members, donations, expenses, experiences, weekly fees, and gallery.
+A full-stack web application for managing Ledo Sports Academy operations, including members, activities, donations, expenses, and more.
 
-## Technology Stack
+## Features
+
+- Hero slides management for the homepage carousel
+- Activities management for upcoming and recent events
+- Members directory with search functionality
+- Donations tracking with total calculation
+- Experience/achievements showcase
+- Expense tracking with category-wise reporting
+- Weekly fee management for academy members
+
+## Tech Stack
+
 - **Frontend**: HTML, CSS, JavaScript
 - **Backend**: Node.js, Express.js
-- **Database**: MongoDB Atlas (Cloud Database)
-- **Authentication**: JWT (JSON Web Tokens)
+- **Database**: MongoDB Atlas
 
-## Setup Instructions
+## API Endpoints
 
-### Prerequisites
-- Node.js (v14 or higher)
-- MongoDB Atlas account or local MongoDB installation
-- npm or yarn package manager
+### Hero Slides
+- `GET /api/hero-slides` - Get all hero slides
+- `GET /api/hero-slides/:id` - Get hero slide by ID
+- `POST /api/hero-slides` - Create a new hero slide
+- `PUT /api/hero-slides/:id` - Update a hero slide
+- `DELETE /api/hero-slides/:id` - Delete a hero slide
 
-### Installation
+### Activities
+- `GET /api/activities` - Get all activities
+- `GET /api/activities/status/:status` - Get activities by status (upcoming/recent)
+- `GET /api/activities/:id` - Get activity by ID
+- `POST /api/activities` - Create a new activity
+- `PUT /api/activities/:id` - Update an activity
+- `DELETE /api/activities/:id` - Delete an activity
+
+### Members
+- `GET /api/members/search` - Search members by name
+- `GET /api/members` - Get all members
+- `GET /api/members/:id` - Get member by ID
+- `POST /api/members` - Create a new member
+- `PUT /api/members/:id` - Update a member
+- `DELETE /api/members/:id` - Delete a member
+
+### Donations
+- `GET /api/donations` - Get all donations
+- `GET /api/donations/total` - Get total donation amount
+- `GET /api/donations/:id` - Get donation by ID
+- `POST /api/donations` - Create a new donation
+- `PUT /api/donations/:id` - Update a donation
+- `DELETE /api/donations/:id` - Delete a donation
+
+### Experiences
+- `GET /api/experiences` - Get all experiences
+- `GET /api/experiences/:id` - Get experience by ID
+- `POST /api/experiences` - Create a new experience
+- `PUT /api/experiences/:id` - Update an experience
+- `DELETE /api/experiences/:id` - Delete an experience
+
+### Expenses
+- `GET /api/expenses` - Get all expenses
+- `GET /api/expenses/total` - Get total expense amount
+- `GET /api/expenses/by-category` - Get expenses grouped by category
+- `GET /api/expenses/:id` - Get expense by ID
+- `POST /api/expenses` - Create a new expense
+- `PUT /api/expenses/:id` - Update an expense
+- `DELETE /api/expenses/:id` - Delete an expense
+
+### Weekly Fees
+- `GET /api/weekly-fees` - Get all weekly fees
+- `GET /api/weekly-fees/:memberId` - Get weekly fees by member ID
+- `POST /api/weekly-fees` - Create a new weekly fee record
+- `PUT /api/weekly-fees/:memberId` - Update a weekly fee record
+- `POST /api/weekly-fees/:memberId/payments` - Add a new payment
+- `PUT /api/weekly-fees/:memberId/payments/:paymentIndex` - Update payment status
+- `DELETE /api/weekly-fees/:memberId` - Delete a weekly fee record
+
+## Setup and Installation
+
 1. Clone the repository
 2. Install dependencies:
    ```
    npm install
    ```
-3. Create a `.env` file in the root directory with the following variables:
+3. Set up environment variables (if needed)
+4. Seed the database with initial data:
    ```
-   PORT=5000
-   MONGODB_URI=mongodb+srv://ledosportsacademy:iD0xFkdX5IqDXWLK@cluster0.bpaauiy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
-   JWT_SECRET=ledo_sports_academy_secret_key
-   NODE_ENV=development
+   npm run seed
    ```
-   
-   Note: The MongoDB URI is already configured to connect to the Ledo Sports Academy database in MongoDB Atlas.
-4. Verify the database connection:
-   ```
-   npm run db:verify
-   ```
-   This will check if your application can connect to MongoDB and verify all models.
-
-5. Seed the database with initial data (if needed):
-   ```
-   npm run db:seed
-   ```
-
-6. Start the server:
+5. Start the server:
    ```
    npm start
    ```
-   For development with auto-reload:
+   or for development with auto-reload:
    ```
    npm run dev
    ```
+6. Access the application at http://localhost:3000
 
-## API Endpoints
+## Database Connection
 
-### Authentication
-- `POST /api/admin/login` - Admin login
-- `GET /api/admin/profile` - Get admin profile (protected)
-- `POST /api/admin` - Create a new admin (super admin only)
-- `PUT /api/admin/password` - Update admin password (protected)
-
-### Hero Slides
-- `GET /api/hero` - Get all hero slides
-- `GET /api/hero/:id` - Get hero slide by ID
-- `POST /api/hero` - Create a new hero slide (protected)
-- `PUT /api/hero/:id` - Update a hero slide (protected)
-- `DELETE /api/hero/:id` - Delete a hero slide (protected)
-- `PUT /api/hero/order` - Update hero slides order (protected)
-
-### Activities
-- `GET /api/activities` - Get all activities
-- `GET /api/activities/recent` - Get recent activities
-- `GET /api/activities/upcoming` - Get upcoming activities
-- `GET /api/activities/:id` - Get activity by ID
-- `POST /api/activities` - Create a new activity (protected)
-- `PUT /api/activities/:id` - Update an activity (protected)
-- `DELETE /api/activities/:id` - Delete an activity (protected)
-- `PATCH /api/activities/:id/status` - Update activity status (protected)
-
-### Members
-- `GET /api/members` - Get all members (protected)
-- `GET /api/members/count` - Get total count of active members (protected)
-- `GET /api/members/:id` - Get member by ID (protected)
-- `POST /api/members` - Create a new member (protected)
-- `PUT /api/members/:id` - Update a member (protected)
-- `DELETE /api/members/:id` - Delete a member (protected)
-- `PATCH /api/members/:id/status` - Update member active status (protected)
-
-### Donations
-- `GET /api/donations` - Get all donations (protected)
-- `GET /api/donations/stats` - Get donation statistics (protected)
-- `GET /api/donations/:id` - Get donation by ID (protected)
-- `POST /api/donations` - Create a new donation (protected)
-- `PUT /api/donations/:id` - Update a donation (protected)
-- `DELETE /api/donations/:id` - Delete a donation (protected)
-
-### Expenses
-- `GET /api/expenses` - Get all expenses (protected)
-- `GET /api/expenses/stats` - Get expense statistics (protected)
-- `GET /api/expenses/:id` - Get expense by ID (protected)
-- `POST /api/expenses` - Create a new expense (protected)
-- `PUT /api/expenses/:id` - Update an expense (protected)
-- `DELETE /api/expenses/:id` - Delete an expense (protected)
-
-### Experiences
-- `GET /api/experiences` - Get all experiences
-- `GET /api/experiences/:id` - Get experience by ID
-- `POST /api/experiences` - Create a new experience (protected)
-- `PUT /api/experiences/:id` - Update an experience (protected)
-- `DELETE /api/experiences/:id` - Delete an experience (protected)
-- `POST /api/experiences/:id/images` - Add images to an experience (protected)
-- `DELETE /api/experiences/:id/images` - Remove images from an experience (protected)
-
-### Weekly Fees
-- `GET /api/weekly-fees` - Get all weekly fees (protected)
-- `GET /api/weekly-fees/stats` - Get weekly fee statistics (protected)
-- `GET /api/weekly-fees/member/:memberId` - Get weekly fees by member ID (protected)
-- `GET /api/weekly-fees/:id` - Get weekly fee by ID (protected)
-- `POST /api/weekly-fees` - Create a new weekly fee (protected)
-- `POST /api/weekly-fees/batch` - Create weekly fees for all active members (protected)
-- `PUT /api/weekly-fees/:id` - Update a weekly fee (protected)
-- `DELETE /api/weekly-fees/:id` - Delete a weekly fee (protected)
-
-### Gallery
-- `GET /api/gallery` - Get all gallery items
-- `GET /api/gallery/featured` - Get featured gallery items
-- `GET /api/gallery/:id` - Get gallery item by ID
-- `POST /api/gallery` - Create a new gallery item (protected)
-- `PUT /api/gallery/:id` - Update a gallery item (protected)
-- `DELETE /api/gallery/:id` - Delete a gallery item (protected)
-- `PUT /api/gallery/featured/order` - Update featured gallery items order (protected)
-- `PATCH /api/gallery/:id/featured` - Toggle featured status of a gallery item (protected)
-
-## File Upload
-The application supports image uploads for various entities. Files are stored in the `/uploads` directory with subdirectories for each entity type.
-
-## Default Admin Account
-A default admin account is created on first server start:
-- Username: `admin`
-- Password: `ledosports2024`
-
-It is recommended to change the password after first login.
+The application connects to MongoDB Atlas using the following connection string:
+```
+mongodb+srv://ledosportsacademy:I9R3MjfaSSYFXMKS@cluster0.l6exrot.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+```
 
 ## License
+
 This project is proprietary and confidential. Unauthorized copying, distribution, or use is strictly prohibited.

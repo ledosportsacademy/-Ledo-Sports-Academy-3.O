@@ -1,60 +1,35 @@
 const mongoose = require('mongoose');
 
-const MemberSchema = new mongoose.Schema({
+const memberSchema = new mongoose.Schema({
+  id: {
+    type: Number,
+    required: true,
+    unique: true
+  },
   name: {
     type: String,
-    required: true,
-    trim: true
+    required: true
   },
   contact: {
     type: String,
-    required: true,
-    trim: true
+    required: true
   },
   phone: {
     type: String,
-    required: true,
-    trim: true
+    required: true
   },
   joinDate: {
-    type: Date,
+    type: String,
     required: true
   },
   role: {
     type: String,
-    required: true,
-    trim: true
+    required: true
   },
   image: {
     type: String,
-    required: true,
-    trim: true
-  },
-  address: {
-    type: String,
-    trim: true,
-    default: ''
-  },
-  emergencyContact: {
-    type: String,
-    trim: true,
-    default: ''
-  },
-  dateOfBirth: {
-    type: Date
-  },
-  active: {
-    type: Boolean,
-    default: true
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now
+    required: true
   }
-});
+}, { timestamps: true });
 
-module.exports = mongoose.model('Member', MemberSchema);
+module.exports = mongoose.model('Member', memberSchema);

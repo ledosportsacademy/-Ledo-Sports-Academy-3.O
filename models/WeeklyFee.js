@@ -1,55 +1,31 @@
 const mongoose = require('mongoose');
 
-const WeeklyFeeSchema = new mongoose.Schema({
-  member: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Member',
-    required: true
-  },
-  weekStartDate: {
-    type: Date,
-    required: true
-  },
-  weekEndDate: {
-    type: Date,
+const paymentSchema = new mongoose.Schema({
+  date: {
+    type: String,
     required: true
   },
   amount: {
     type: Number,
-    required: true,
-    default: 20
+    required: true
   },
-  paymentDate: {
-    type: Date,
-    required: true,
-    default: Date.now
-  },
-  paymentStatus: {
+  status: {
     type: String,
-    enum: ['Paid', 'Pending', 'Waived'],
-    default: 'Paid'
-  },
-  paymentMethod: {
-    type: String,
-    enum: ['Cash', 'Bank Transfer', 'UPI', 'Other'],
-    default: 'Cash'
-  },
-  notes: {
-    type: String,
-    trim: true
-  },
-  collectedBy: {
-    type: String,
-    trim: true
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now
+    enum: ['paid', 'pending', 'overdue'],
+    required: true
   }
 });
 
-module.exports = mongoose.model('WeeklyFee', WeeklyFeeSchema);
+const weeklyFeeSchema = new mongoose.Schema({
+  memberId: {
+    type: Number,
+    required: true
+  },
+  memberName: {
+    type: String,
+    required: true
+  },
+  payments: [paymentSchema]
+}, { timestamps: true });
+
+module.exports = mongoose.model('WeeklyFee', weeklyFeeSchema);

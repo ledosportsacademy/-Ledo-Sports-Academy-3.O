@@ -1,0 +1,339 @@
+{
+	"info": {
+		"_postman_id": "b5f8e8d0-5b1e-4b5a-8b1a-5b1e4b5a8b1a",
+		"name": "Ledo Sports Academy API",
+		"description": "API collection for Ledo Sports Academy management system",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Hero Slides",
+			"item": [
+				{
+					"name": "Get All Hero Slides",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/hero-slides",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "hero-slides"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Hero Slide by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/hero-slides/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "hero-slides", "1"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Hero Slide",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"New Hero Slide\",\n  \"subtitle\": \"Test Subtitle\",\n  \"description\": \"This is a test hero slide created via API\",\n  \"backgroundImage\": \"https://images.unsplash.com/photo-1552667466-07770ae110d0?w=1200&h=700&fit=crop\",\n  \"ctaText\": \"Learn More\",\n  \"ctaLink\": \"#test\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/hero-slides",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "hero-slides"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Hero Slide",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Updated Hero Slide\",\n  \"subtitle\": \"Updated Subtitle\",\n  \"description\": \"This hero slide has been updated via API\",\n  \"backgroundImage\": \"https://images.unsplash.com/photo-1552667466-07770ae110d0?w=1200&h=700&fit=crop\",\n  \"ctaText\": \"Learn More\",\n  \"ctaLink\": \"#updated\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/hero-slides/5",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "hero-slides", "5"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Hero Slide",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/hero-slides/5",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "hero-slides", "5"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Activities",
+			"item": [
+				{
+					"name": "Get All Activities",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/activities",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "activities"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Activities by Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/activities/status/upcoming",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "activities", "status", "upcoming"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Activity by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/activities/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "activities", "1"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Members",
+			"item": [
+				{
+					"name": "Get All Members",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/members",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "members"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Members",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/members/search?query=ar",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "members", "search"],
+							"query": [
+								{
+									"key": "query",
+									"value": "ar"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Donations",
+			"item": [
+				{
+					"name": "Get All Donations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/donations",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "donations"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Total Donations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/donations/total",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "donations", "total"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Experiences",
+			"item": [
+				{
+					"name": "Get All Experiences",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/experiences",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "experiences"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Expenses",
+			"item": [
+				{
+					"name": "Get All Expenses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/expenses",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "expenses"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Total Expenses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/expenses/total",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "expenses", "total"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Expenses By Category",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/expenses/by-category",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "expenses", "by-category"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Weekly Fees",
+			"item": [
+				{
+					"name": "Get All Weekly Fees",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/weekly-fees",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "weekly-fees"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Weekly Fees by Member ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/weekly-fees/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "weekly-fees", "1"]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

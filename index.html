@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ledo Sports Academy - Management System</title>
-    <link rel="icon" type="image/svg+xml" href="uploads/favicon.svg">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -26,11 +24,7 @@
                     <a href="#expenses" class="nav-link">Expenses</a>
                     <a href="#experiences" class="nav-link">Experience Log</a>
                     <a href="#weekly-fees" class="nav-link">Weekly Fees</a>
-                    <a href="#gallery" class="nav-link">Gallery</a>
                     <a href="#dashboard" class="nav-link admin-only hidden">Dashboard</a>
-                    <a href="#hero-management" class="nav-link admin-only hidden">Hero Management</a>
-                    <a href="#" class="nav-link mobile-admin-login" id="mobileAdminLogin">Admin Login</a>
-                    <a href="#" class="nav-link mobile-admin-logout admin-only hidden" id="mobileAdminLogout">Logout</a>
                 </nav>
                 <div class="admin-section">
                     <button class="btn btn--outline hidden" id="adminLoginBtn">Admin Login</button>
@@ -78,20 +72,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Hero Management Section -->
-        <section id="hero-management" class="section">
-            <div class="container">
-                <div class="section-header">
-                    <h3>Hero Slideshow Management</h3>
-                    <button class="btn btn--primary admin-only" id="addHeroSlideBtn">Add Hero Slide</button>
-                </div>
-                
-                <div class="hero-slides-grid" id="heroSlidesGrid">
-                    <!-- Hero slides will be populated by JavaScript -->
                 </div>
             </div>
         </section>
@@ -290,49 +270,7 @@
                 </div>
             </div>
         </section>
-
-        <!-- Gallery Section -->
-        <section id="gallery" class="section">
-            <div class="container">
-                <div class="section-header">
-                    <h3>Photo Gallery</h3>
-                    <div class="section-header-actions">
-                        <button class="btn btn--outline" id="refreshGalleryBtn"><i class="fas fa-sync"></i> Refresh</button>
-                        <button class="btn btn--primary hidden admin-only" id="addGalleryBtn">Add Photo</button>
-                    </div>
-                </div>
-                
-                <div class="admin-only gallery-management">
-                    <div class="gallery-controls">
-                        <h4>Top 5 Featured Photos for Homepage</h4>
-                        <p>Drag photos below to reorder them for the homepage slideshow</p>
-                        <div class="top5-gallery" id="top5Gallery">
-                            <!-- Top 5 photos will be populated by JavaScript -->
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="gallery-grid" id="galleryGrid">
-                    <!-- Gallery photos will be populated by JavaScript -->
-                </div>
-            </div>
-        </section>
     </main>
-
-    <!-- Lightbox Modal -->
-    <div class="lightbox hidden" id="lightbox">
-        <div class="lightbox-content">
-            <button class="lightbox-close" id="lightboxClose">&times;</button>
-            <img src="" alt="" id="lightboxImage">
-            <div class="lightbox-info">
-                <h4 id="lightboxTitle"></h4>
-            </div>
-            <div class="lightbox-nav">
-                <button class="lightbox-prev" id="lightboxPrev">‹</button>
-                <button class="lightbox-next" id="lightboxNext">›</button>
-            </div>
-        </div>
-    </div>
 
     <!-- Admin Login Modal -->
     <div class="modal hidden" id="adminLoginModal">
@@ -346,53 +284,6 @@
                 <div class="modal-actions">
                     <button type="button" class="btn btn--outline" id="cancelLoginBtn">Cancel</button>
                     <button type="submit" class="btn btn--primary">Login</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Hero Slide Form Modal -->
-    <div class="modal hidden" id="heroSlideModal">
-        <div class="modal-content">
-            <h3 id="heroSlideModalTitle">Add Hero Slide</h3>
-            <form id="heroSlideForm">
-                <div class="form-group">
-                    <label class="form-label">Title</label>
-                    <input type="text" class="form-control" id="heroSlideTitle" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Subtitle</label>
-                    <input type="text" class="form-control" id="heroSlideSubtitle" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Description</label>
-                    <textarea class="form-control" id="heroSlideDescription" rows="3" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Background Image URL</label>
-                    <input type="url" class="form-control" id="heroSlideBackgroundImage" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">CTA Button Text</label>
-                    <input type="text" class="form-control" id="heroSlideCtaText" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Default CTA Link</label>
-                    <input type="text" class="form-control" id="heroSlideCtaLink" placeholder="#section or URL">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Redirect URL (Admin Override)</label>
-                    <input type="url" class="form-control" id="heroSlideRedirectUrl" placeholder="https://example.com">
-                    <small class="form-text">If set, this URL will be used instead of the default CTA link</small>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">
-                        <input type="checkbox" id="heroSlideOpenNewTab"> Open redirect URL in new tab
-                    </label>
-                </div>
-                <div class="modal-actions">
-                    <button type="button" class="btn btn--outline" id="cancelHeroSlideBtn">Cancel</button>
-                    <button type="submit" class="btn btn--primary">Save</button>
                 </div>
             </form>
         </div>
@@ -431,16 +322,6 @@
                         <option value="recent">Recent</option>
                         <option value="active">Active</option>
                     </select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Redirect URL (Admin Override)</label>
-                    <input type="url" class="form-control" id="activityRedirectUrl" placeholder="https://example.com">
-                    <small class="form-text">If set, clicking this event will redirect to this URL</small>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">
-                        <input type="checkbox" id="activityOpenNewTab"> Open redirect URL in new tab
-                    </label>
                 </div>
                 <div class="modal-actions">
                     <button type="button" class="btn btn--outline" id="cancelActivityBtn">Cancel</button>
@@ -601,41 +482,11 @@
         </div>
     </div>
 
-    <!-- Gallery Form Modal -->
-    <div class="modal hidden" id="galleryModal">
-        <div class="modal-content">
-            <h3 id="galleryModalTitle">Add Photo</h3>
-            <form id="galleryForm">
-                <div class="form-group">
-                    <label class="form-label">Title</label>
-                    <input type="text" class="form-control" id="galleryTitle" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Image URL</label>
-                    <input type="url" class="form-control" id="galleryUrl" required>
-                    <small class="form-text">Please enter a valid image URL (http:// or https://)</small>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Album/Event (Optional)</label>
-                    <input type="text" class="form-control" id="galleryAlbum" placeholder="e.g., Training, Tournament, Awards">
-                </div>
-                <div class="modal-actions">
-                    <button type="button" class="btn btn--outline" id="cancelGalleryBtn">Cancel</button>
-                    <button type="submit" class="btn btn--primary">Save</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
     <!-- Success/Error Message -->
     <div class="message hidden" id="message">
         <span id="messageText"></span>
     </div>
 
-    <script src="api.js"></script>
-    <script src="db-status-indicator.js"></script>
     <script src="app.js"></script>
-    
-    <!-- Database Status Indicator will be injected here by db-status-indicator.js -->
 </body>
 </html>

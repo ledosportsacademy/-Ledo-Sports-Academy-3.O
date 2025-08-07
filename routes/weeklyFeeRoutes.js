@@ -1,46 +1,26 @@
 const express = require('express');
 const router = express.Router();
 const weeklyFeeController = require('../controllers/weeklyFeeController');
-const { auth } = require('../middleware/auth');
 
-// @route   GET /api/weekly-fees
-// @desc    Get all weekly fees
-// @access  Private
-router.get('/', auth, weeklyFeeController.getAllWeeklyFees);
+// GET all weekly fees
+router.get('/', weeklyFeeController.getAllWeeklyFees);
 
-// @route   GET /api/weekly-fees/stats
-// @desc    Get weekly fee statistics
-// @access  Private
-router.get('/stats', auth, weeklyFeeController.getWeeklyFeeStats);
+// GET weekly fees for a specific member
+router.get('/member/:memberId', weeklyFeeController.getWeeklyFeesByMemberId);
 
-// @route   GET /api/weekly-fees/member/:memberId
-// @desc    Get weekly fees by member ID
-// @access  Private
-router.get('/member/:memberId', auth, weeklyFeeController.getWeeklyFeesByMember);
+// POST a new weekly fee for a member
+router.post('/', weeklyFeeController.createWeeklyFee);
 
-// @route   GET /api/weekly-fees/:id
-// @desc    Get weekly fee by ID
-// @access  Private
-router.get('/:id', auth, weeklyFeeController.getWeeklyFeeById);
+// PUT (update) weekly fees for a member
+router.put('/member/:memberId', weeklyFeeController.updateWeeklyFee);
 
-// @route   POST /api/weekly-fees
-// @desc    Create a new weekly fee
-// @access  Private
-router.post('/', auth, weeklyFeeController.createWeeklyFee);
+// POST add a payment to a member's weekly fees
+router.post('/member/:memberId/payment', weeklyFeeController.addPayment);
 
-// @route   POST /api/weekly-fees/batch
-// @desc    Create weekly fees for all active members
-// @access  Private
-router.post('/batch', auth, weeklyFeeController.createWeeklyFeesForAllMembers);
+// PUT update a payment status
+router.put('/member/:memberId/payment/:paymentIndex', weeklyFeeController.updatePaymentStatus);
 
-// @route   PUT /api/weekly-fees/:id
-// @desc    Update a weekly fee
-// @access  Private
-router.put('/:id', auth, weeklyFeeController.updateWeeklyFee);
-
-// @route   DELETE /api/weekly-fees/:id
-// @desc    Delete a weekly fee
-// @access  Private
-router.delete('/:id', auth, weeklyFeeController.deleteWeeklyFee);
+// DELETE weekly fees for a member
+router.delete('/member/:memberId', weeklyFeeController.deleteWeeklyFee);
 
 module.exports = router;
